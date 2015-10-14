@@ -12,7 +12,7 @@ import scala.collection.JavaConverters.enumerationAsScalaIteratorConverter
 import org.eclipse.core.runtime.IPath
 import org.eclipse.core.runtime.Path
 import org.scalaide.core.internal.ScalaPlugin
-import sbt.ScalaInstance
+import sbt.internal.inc.ScalaInstance
 import java.util.zip.ZipEntry
 import org.scalaide.util.internal.CompilerUtils.isBinarySame
 import org.scalaide.core.internal.project.ScalaInstallation.extractVersion

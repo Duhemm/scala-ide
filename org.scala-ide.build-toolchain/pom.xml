@@ -26,6 +26,12 @@
       <name>Typesafe IDE repository ${scala.short.version}</name>
       <url>${repo.typesafe}</url>
     </repository>
+    <repository>
+      <snapshots><enabled>false</enabled></snapshots>
+      <id>bintray-sbt-maven-releases</id>
+      <name>bintray</name>
+      <url>http://dl.bintray.com/sbt/maven-releases</url>
+    </repository>
   </repositories>
 
 
@@ -45,7 +51,5 @@
   <modules>
     <module>../org.scala-ide.sbt.full.library</module>
     <module>../org.scala-ide.sbt.full.library.source</module>
-    <module>../org.scala-ide.sbt.compiler.interface</module>
-    <module>../org.scala-ide.sbt.compiler.interface.source</module>
   </modules>
 </project>

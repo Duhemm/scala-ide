@@ -27,7 +27,7 @@ class JavaEclipseCompiler(p: IProject, monitor: SubMonitor) extends JavaCompiler
 
   override def project = p
 
-  override def compile(sources: Array[File], classpath: Array[File], output: Output, options: Array[String], log: Logger): Unit = {
+  override def compileWithReporter(sources: Array[File], classpath: Array[File], output: Output, options: Array[String], reporter: Reporter, log: Logger): Unit = {
     val scalaProject = IScalaPlugin().getScalaProject(project)
 
     val allSourceFiles = scalaProject.allSourceFiles()
@@ -53,7 +53,4 @@ class JavaEclipseCompiler(p: IProject, monitor: SubMonitor) extends JavaCompiler
       refresh()
     }
   }
-
-  override def compileWithReporter(sources: Array[File], classpath: Array[File], output: Output, options: Array[String], reporter: Reporter, log: Logger): Unit =
-    compile(sources, classpath, output, options, log)
 }

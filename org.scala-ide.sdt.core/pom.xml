@@ -20,7 +20,43 @@
     </profile>
   </profiles>
 
+  <!-- repository containing the sbt packages -->
+  <repositories>
+    <repository>
+      <id>typesafe-ide-${scala.short.version}</id>
+      <name>Typesafe IDE repository ${scala.short.version}</name>
+      <url>${repo.typesafe}</url>
+    </repository>
+    <repository>
+      <snapshots><enabled>false</enabled></snapshots>
+      <id>bintray-sbt-maven-releases</id>
+      <name>bintray</name>
+      <url>http://dl.bintray.com/sbt/maven-releases</url>
+    </repository>
+  </repositories>
+
   <dependencies>
+    <dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>incrementalcompiler-compile-core_2.11</artifactId>
+      <type>jar</type>
+      <version>${incrementalcompiler.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>incrementalcompiler-core_2.11</artifactId>
+      <type>jar</type>
+      <version>${incrementalcompiler.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>incrementalcompiler-classpath_2.11</artifactId>
+      <type>jar</type>
+      <version>${incrementalcompiler.version}</version>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>com.miglayout</groupId>
       <artifactId>miglayout</artifactId>

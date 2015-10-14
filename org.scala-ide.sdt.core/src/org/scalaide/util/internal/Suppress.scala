@@ -7,7 +7,6 @@ import org.eclipse.jdt.core.ICodeAssist
 import org.eclipse.jdt.core.IJavaElement
 import org.eclipse.jdt.core.WorkingCopyOwner
 import org.eclipse.jdt.internal.core.Openable
-import java.io.File
 
 /**
  * This type exists only to suppress warnings of scalac. One should try to not
@@ -68,8 +67,8 @@ object Suppress {
     def `Console.setErr`(out: PrintStream): Unit =
       Console.setErr(out)
 
-    type AggressiveCompile = sbt.compiler.AggressiveCompile
-    def aggressivelyCompile(agg: AggressiveCompile)(implicit log: sbt.Logger) = agg.apply _
+    // type AggressiveCompile = sbt.compiler.AggressiveCompile
+    // def aggressivelyCompile(agg: AggressiveCompile)(implicit log: sbt.util.Logger) = agg.apply _
   }
   object DeprecatedWarning extends DeprecatedWarning
 }

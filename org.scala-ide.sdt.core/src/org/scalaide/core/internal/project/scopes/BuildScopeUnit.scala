@@ -21,8 +21,8 @@ import org.scalaide.core.internal.project.CompileScope
 import org.scalaide.ui.internal.preferences.ScopesSettings
 import org.scalaide.util.internal.SettingConverterUtil
 
-import sbt.inc.Analysis
-import sbt.inc.IncOptions
+import sbt.internal.inc.Analysis
+import sbt.internal.inc.IncOptions
 
 /**
  * Manages compilation of sources for given scope.

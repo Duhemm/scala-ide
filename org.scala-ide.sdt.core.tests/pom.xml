@@ -71,6 +71,7 @@
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>tycho-surefire-plugin</artifactId>
             <configuration>
+              <failIfNoTests>false</failIfNoTests>
               <redirectTestOutputToFile>true</redirectTestOutputToFile>
               <testSuite>${project.artifactId}</testSuite>
               <testClass>org.scalaide.core.leaks.MemoryLeaksTest</testClass>
@@ -118,6 +119,7 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
+          <failIfNoTests>false</failIfNoTests>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <testSuite>${project.artifactId}</testSuite>
           <testClass>org.scalaide.TestsSuite</testClass>
