@@ -28,15 +28,13 @@ import org.scalaide.core.internal.builder.TaskManager
 import org.scalaide.logging.HasLogger
 import org.scalaide.util.eclipse.FileUtils
 import org.scalaide.util.internal.SbtUtils
-import org.scalaide.util.internal.Suppress.DeprecatedWarning.AggressiveCompile
-import org.scalaide.util.internal.Suppress.DeprecatedWarning.aggressivelyCompile
 
-import sbt.Logger.xlog2Log
-import sbt.compiler.CompileFailed
-import sbt.compiler.IC
-import sbt.inc.Analysis
-import sbt.inc.IncOptions
-import sbt.inc.SourceInfo
+import sbt.util.Logger.xlog2Log
+import xsbti.CompileFailed
+import sbt.internal.inc.IC
+import sbt.internal.inc.Analysis
+import sbt.internal.inc.IncOptions
+import sbt.internal.inc.SourceInfo
 import xsbti.F0
 import xsbti.Logger
 import xsbti.compile.CompileProgress
@@ -141,11 +139,11 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
     val scalaInstall = findInstallation(project)
     logger.info(s"Running compiler using $scalaInstall")
     val progress = new SbtProgress
-    val inputs = new SbtInputs(scalaInstall, sources, project, monitor, progress, tempDirFile, sbtLogger,
+    val inputs = new SbtInputs(scalaInstall, sources, project, monitor, progress, sbtReporter, tempDirFile, sbtLogger, cacheFile,
       addToClasspath, srcOutputs)
     val analysis =
       try
-        Some(aggressiveCompile(inputs, sbtLogger))
+        Some(IC.compile(inputs, sbtLogger))
       catch {
         case _: CompileFailed | CompilerInterfaceFailed => None
       }
@@ -196,32 +194,32 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
    */
   override def buildManagerOf(outputFile: File): Option[EclipseBuildManager] = None
 
-  /** Inspired by IC.compile
-   *
-   *  We need to duplicate IC.compile (by inlining insde this
-   *  private method) because the Java interface it has as a
-   *  parameter serializes IncOptions to a String map, which is
-   *  not expressive enough to use the transactional classfile
-   *  manager (required for correctness).  In other terms, we
-   *  need a richer (IncOptions) parameter type, here.
-   */
-  private def aggressiveCompile(in: SbtInputs, log: Logger): Analysis = {
-    val options = in.options; import options.{ options => scalacOptions, _ }
-    val compilers = in.compilers
-    val agg = new AggressiveCompile(cacheFile)
-    val aMap = (f: File) => SbtUtils.m2o(in.analysisMap(f))
-    val defClass = (f: File) => { val dc = Locator(f); (name: String) => dc.apply(name) }
+  // /** Inspired by IC.compile
+  //  *
+  //  *  We need to duplicate IC.compile (by inlining insde this
+  //  *  private method) because the Java interface it has as a
+  //  *  parameter serializes IncOptions to a String map, which is
+  //  *  not expressive enough to use the transactional classfile
+  //  *  manager (required for correctness).  In other terms, we
+  //  *  need a richer (IncOptions) parameter type, here.
+  //  */
+  // private def aggressiveCompile(in: SbtInputs, log: Logger): Analysis = {
+  //   val options = in.options; import options.{ options => scalacOptions, _ }
+  //   val compilers = in.compilers
+  //   val agg = new AggressiveCompile(cacheFile)
+  //   val aMap = (f: File) => SbtUtils.m2o(in.analysisMap(f))
+  //   val defClass = (f: File) => { val dc = Locator(f); (name: String) => dc.apply(name) }
 
-    compilers match {
-      case Right(comps) =>
-        import comps._
-        aggressivelyCompile(agg)(log)(scalac, javac, options.sources, classpath, output, in.cache, SbtUtils.m2o(in.progress),
-          scalacOptions, javacOptions, aMap, defClass, sbtReporter, order, /* skip = */ false, in.incOptions)
-      case Left(errors) =>
-        sbtReporter.log(SbtUtils.NoPosition, errors, xsbti.Severity.Error)
-        throw CompilerInterfaceFailed
-    }
-  }
+  //   compilers match {
+  //     case Right(comps) =>
+  //       import comps._
+  //       aggressivelyCompile(agg)(log)(scalac, javac, options.sources, classpath, output, in.cache, SbtUtils.m2o(in.progress),
+  //         scalacOptions, javacOptions, aMap, defClass, sbtReporter, order, /* skip = */ false, in.incOptions)
+  //     case Left(errors) =>
+  //       sbtReporter.log(SbtUtils.NoPosition, errors, xsbti.Severity.Error)
+  //       throw CompilerInterfaceFailed
+  //   }
+  // }
 
   private object CompilerInterfaceFailed extends RuntimeException
 

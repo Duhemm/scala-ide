@@ -13,17 +13,18 @@ import org.scalaide.core.internal.project.ScalaInstallation.scalaInstanceForInst
 import org.scalaide.ui.internal.preferences
 import org.scalaide.util.internal.SettingConverterUtil
 
-import sbt.ClasspathOptions
-import sbt.Logger.xlog2Log
-import sbt.classpath.ClasspathUtilities
-import sbt.compiler.AnalyzingCompiler
-import sbt.compiler.CompilerCache
-import sbt.compiler.IC
-import sbt.inc.Analysis
-import sbt.inc.ClassfileManager
-import sbt.inc.Locate
+import sbt.internal.inc.ClasspathOptions
+import sbt.util.Logger.xlog2Log
+import sbt.internal.inc.classpath.ClasspathUtilities
+import sbt.internal.inc.AnalyzingCompiler
+import sbt.internal.inc.CompilerCache
+import sbt.internal.inc.IC
+import sbt.internal.inc.Analysis
+import sbt.internal.inc.DefaultClassfileManager
+import sbt.internal.inc.Locate
 import xsbti.Logger
 import xsbti.Maybe
+import xsbti.Reporter
 import xsbti.compile._
 
 /** Inputs-like class, but not implementing xsbti.compile.Inputs.
@@ -36,36 +37,56 @@ class SbtInputs(installation: IScalaInstallation,
     project: IScalaProject,
     javaMonitor: SubMonitor,
     scalaProgress: CompileProgress,
+    compileReporter: Reporter,
     tempDir: File, // used to store classfiles between compilation runs to implement all-or-nothing semantics
     logger: Logger,
+    compileCacheFile: File,
     addToClasspath: Seq[IPath] = Seq.empty,
-    srcOutputs: Seq[(IContainer, IContainer)] = Seq.empty) {
+    srcOutputs: Seq[(IContainer, IContainer)] = Seq.empty) extends Inputs[Analysis, AnalyzingCompiler] {
 
-  def cache = CompilerCache.fresh // May want to explore caching possibilities.
+  // def cache = CompilerCache.fresh // May want to explore caching possibilities.
 
   private val allProjects = project +: project.transitiveDependencies.flatMap(ScalaPlugin().asScalaProject)
 
-  def analysisMap(f: File): Maybe[Analysis] =
-    if (f.isFile)
-      Maybe.just(Analysis.Empty)
-    else {
-      val analysis = allProjects.collectFirst {
-        case project if project.buildManager.buildManagerOf(f).nonEmpty =>
-          project.buildManager.buildManagerOf(f).get.latestAnalysis(incOptions)
-      }
-      Maybe.just(analysis.getOrElse(Analysis.Empty))
-    }
+  // def progress = Maybe.just(scalaProgress)
 
-  def progress = Maybe.just(scalaProgress)
-
-  def incOptions: sbt.inc.IncOptions = {
-    sbt.inc.IncOptions.Default.
+  def incOptions: sbt.internal.inc.IncOptions = {
+    sbt.internal.inc.IncOptions.Default.
       withApiDebug(apiDebug = project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.apiDiff.name))).
       withRelationsDebug(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.relationsDebug.name))).
-      withNewClassfileManager(ClassfileManager.transactional(tempDir, logger)).
+      withNewClassfileManager(DefaultClassfileManager.transactional(tempDir, logger)).
       withApiDumpDirectory(None).
       withRecompileOnMacroDef(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.recompileOnMacroDef.name))).
       withNameHashing(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.nameHashing.name)))
+  }
+
+  def setup: Setup[Analysis] = new Setup[Analysis] {
+    override def analysisMap(f: File): Maybe[Analysis] =
+      if (f.isFile)
+        Maybe.just(Analysis.Empty)
+      else {
+        val analysis = allProjects.collectFirst {
+          case project if project.buildManager.buildManagerOf(f).nonEmpty =>
+            project.buildManager.buildManagerOf(f).get.latestAnalysis(incOptions)
+        }
+        Maybe.just(analysis.getOrElse(Analysis.Empty))
+      }
+
+    override def definesClass(file: File): DefinesClass = Locator(file)
+
+    override val skip: Boolean = false
+
+    override def cacheFile: File = compileCacheFile
+
+    override def cache: GlobalsCache = CompilerCache.fresh
+
+    override def progress: Maybe[CompileProgress] = Maybe.just(scalaProgress)
+
+    override def reporter: Reporter = compileReporter
+
+    override def incrementalCompilerOptions: java.util.Map[String, String] =
+      sbt.internal.inc.IncOptions.toStringMap(incOptions)
+
   }
 
   def options = new Options {
@@ -125,16 +146,23 @@ class SbtInputs(installation: IScalaInstallation,
       case "ScalaThenJava" => ScalaThenJava
       case _ => Mixed
     }
+
+    override val newClassfileManager =
+      new xsbti.F0[ClassfileManager] { def apply() = DefaultClassfileManager.transactional(tempDir, logger)() }
   }
 
   /**
    * @return Right-biased instance of Either (error message in Left, value in Right)
    */
-  def compilers: Either[String, Compilers[sbt.compiler.AnalyzingCompiler]] = {
+  // TODO: This is ugly and this will not work. I just want to see how far it goes for now.
+  def compilers: Compilers[AnalyzingCompiler] = {
     val scalaInstance = scalaInstanceForInstallation(installation)
     val store = ScalaPlugin().compilerInterfaceStore
 
-    store.compilerInterfaceFor(installation)(javaMonitor.newChild(10)).right.map {
+    val int = store.compilerInterfaceFor(installation)(javaMonitor.newChild(10))
+    org.scalaide.util.eclipse.Print.print2file(int.toString)
+
+    int.right.map {
       compilerInterface =>
         // prevent Sbt from adding things to the (boot)classpath
         val cpOptions = new ClasspathOptions(false, false, false, autoBoot = false, filterLibrary = false)
@@ -142,7 +170,7 @@ class SbtInputs(installation: IScalaInstallation,
           override def javac = new JavaEclipseCompiler(project.underlying, javaMonitor)
           override def scalac = IC.newScalaCompiler(scalaInstance, compilerInterface.toFile, cpOptions)
         }
-    }
+    }.right.get
   }
 }
 

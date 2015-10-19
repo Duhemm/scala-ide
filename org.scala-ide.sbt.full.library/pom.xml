@@ -13,16 +13,76 @@
 
   <dependencies>
     <dependency>
-        <groupId>org.scala-sbt</groupId>
-        <artifactId>compiler-interface</artifactId>
-        <version>${incrementalcompiler.version}</version>
-        <optional>true</optional>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>compiler-interface</artifactId>
+      <version>${incrementalcompiler.version}</version>
+      <!-- <optional>true</optional> -->
+    </dependency>
+    <dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>incrementalcompiler_2.11</artifactId>
+      <version>${incrementalcompiler.version}</version>
+      <!-- <optional>true</optional> -->
     </dependency>
     <dependency>
         <groupId>org.scala-sbt</groupId>
-        <artifactId>incrementalcompiler_2.11</artifactId>
+        <artifactId>incrementalcompiler-core_2.11</artifactId>
         <version>${incrementalcompiler.version}</version>
-        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.scala-sbt</groupId>
+        <artifactId>incrementalcompiler-compile-core_2.11</artifactId>
+        <version>${incrementalcompiler.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.scala-sbt</groupId>
+        <artifactId>incrementalcompiler-apiinfo_2.11</artifactId>
+        <version>${incrementalcompiler.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>incrementalcompiler-classfile_2.11</artifactId>
+      <version>${incrementalcompiler.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>incrementalcompiler-classpath_2.11</artifactId>
+      <version>${incrementalcompiler.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>incrementalcompiler-persist_2.11</artifactId>
+      <version>${incrementalcompiler.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>io_2.11</artifactId>
+      <version>${sbtio.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>util-logging_2.11</artifactId>
+      <version>${sbtutil.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>util-control_2.11</artifactId>
+      <version>${sbtutil.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>util-relation_2.11</artifactId>
+      <version>${sbtutil.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>jline</groupId>
+      <artifactId>jline</artifactId>
+      <version>2.11</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-tools.sbinary</groupId>
+      <artifactId>sbinary_2.11</artifactId>
+      <version>0.4.2</version>
     </dependency>
     <dependency>
       <groupId>com.googlecode.java-diff-utils</groupId>

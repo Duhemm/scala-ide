@@ -87,6 +87,8 @@
     <jdt.core.version.range>Select an Eclipse profile</jdt.core.version.range>
     <version.tag>local</version.tag>
     <incrementalcompiler.version>0.1.0-M1-fce566260c91e6d1aef860ce9de457b328102ba0-SNAPSHOT</incrementalcompiler.version>
+    <sbtio.version>1.0.0-M3</sbtio.version>
+    <sbtutil.version>0.1.0-M4</sbtutil.version>
     <sbt.version>1.0.0</sbt.version>
 
     <!-- the repos containing the Scala dependencies -->

@@ -17,7 +17,7 @@
       <artifactId>compiler-bridge_2.11</artifactId>
       <version>${incrementalcompiler.version}</version>
       <classifier>sources</classifier>
-      <optional>true</optional>
+      <!-- <optional>true</optional> -->
     </dependency>
   </dependencies>
 

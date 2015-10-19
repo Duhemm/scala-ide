@@ -7,9 +7,9 @@ Bundle-Version: 4.3.0.qualifier
 Bundle-Vendor: scala-ide.org
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Bundle-Activator:
+Bundle-Activator: 
  org.scalaide.core.internal.ScalaPlugin
-Require-Bundle:
+Require-Bundle: 
  org.eclipse.core.expressions,
  org.eclipse.core.filesystem,
  org.eclipse.core.resources,
@@ -54,7 +54,7 @@ Require-Bundle:
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.core.commands,
  org.eclipse.e4.core.contexts
-Import-Package:
+Import-Package: 
  org.eclipse.osgi.service.datalocation,
  org.eclipse.core.runtime,
  org.eclipse.core.runtime.content,
@@ -81,7 +81,7 @@ Import-Package:
  scala.tools.eclipse.contribution.weaving.jdt.ui.javaeditor;apply-aspects:=false,
  scala.tools.eclipse.contribution.weaving.jdt.ui.javaeditor.formatter;apply-aspects:=false,
  scala.tools.eclipse.contribution.weaving.jdt.jdi;apply-aspects:=false
-Export-Package:
+Export-Package: 
  org.scalaide.core,
  org.scalaide.core.compiler,
  org.scalaide.core.completion,
@@ -180,7 +180,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  target/lib/miglayout-3.7.4.jar,
  target/lib/log4j-1.2.17.jar
-Eclipse-ExtensibleAPI:
+Eclipse-ExtensibleAPI: 
  true
 
 

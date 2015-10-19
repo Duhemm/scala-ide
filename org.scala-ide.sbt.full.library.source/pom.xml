@@ -17,14 +17,14 @@
       <artifactId>compiler-interface</artifactId>
       <version>${incrementalcompiler.version}</version>
       <classifier>sources</classifier>
-      <optional>true</optional>
+      <!-- <optional>true</optional> -->
     </dependency>
     <dependency>
       <groupId>org.scala-sbt</groupId>
       <artifactId>incrementalcompiler_2.11</artifactId>
       <version>${incrementalcompiler.version}</version>
       <classifier>sources</classifier>
-      <optional>true</optional>
+      <!-- <optional>true</optional> -->
     </dependency>
   </dependencies>
 

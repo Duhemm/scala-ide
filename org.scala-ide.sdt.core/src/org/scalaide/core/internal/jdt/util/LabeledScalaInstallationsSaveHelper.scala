@@ -16,7 +16,7 @@ import org.scalaide.core.internal.project.ScalaInstallationLabel
 import org.scalaide.core.internal.project.ScalaModule
 import scala.tools.nsc.settings.NoScalaVersion
 import org.scalaide.core.internal.ScalaPlugin
-import sbt.ScalaInstance
+import sbt.internal.inc.ScalaInstance
 import java.net.URLClassLoader
 import java.io.ObjectStreamClass
 import scala.util.Try

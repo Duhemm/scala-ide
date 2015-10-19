@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.IPath
 import scala.tools.nsc.settings.ScalaVersion
 import org.eclipse.core.runtime.IProgressMonitor
 import org.scalaide.core.IScalaInstallation
-import sbt.compiler.IC
+import sbt.internal.inc.IC
 import org.scalaide.core.internal.ScalaPlugin
 import org.eclipse.core.runtime.Platform
 import org.scalaide.util.eclipse.OSGiUtils
@@ -38,8 +38,12 @@ class CompilerInterfaceStore(base: IPath, plugin: ScalaPlugin) extends HasLogger
   // raw stats
   private var hits, misses = 0
 
-  private lazy val compilerInterfaceSrc =
+  private lazy val compilerInterfaceSrc = {
+    org.scalaide.util.eclipse.Print.print2file("Getting compiler interface src.")
+    org.scalaide.util.eclipse.Print.print2file("Bundle: " + plugin.sbtCompilerInterfaceBundle)
+    org.scalaide.util.eclipse.Print.print2file("Getting it: " + OSGiUtils.getBundlePath(plugin.sbtCompilerInterfaceBundle))
     OSGiUtils.getBundlePath(plugin.sbtCompilerInterfaceBundle).flatMap(EclipseUtils.computeSourcePath(SdtConstants.SbtCompilerInterfacePluginId, _))
+  }
 
   private lazy val sbtFullJar = OSGiUtils.getBundlePath(plugin.sbtCompilerBundle)
 
@@ -115,8 +119,10 @@ class CompilerInterfaceStore(base: IPath, plugin: ScalaPlugin) extends HasLogger
           case errs  => Left(s"Error building compiler-interface.jar for ${installation.version.unparse}: ${errs.mkString("\n")}")
         }
 
-      case _ =>
+      case (a, b) =>
         monitor.worked(2)
+        org.scalaide.util.eclipse.Print.print2file("compilerInterfaceSrc: " + a)
+        org.scalaide.util.eclipse.Print.print2file("sbtFullJar: " + b)
         Left("Could not find compiler-interface/sbt bundle")
     }
   }

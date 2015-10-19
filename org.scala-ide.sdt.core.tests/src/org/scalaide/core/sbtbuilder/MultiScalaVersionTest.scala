@@ -17,7 +17,7 @@ import org.scalaide.util.internal.SettingConverterUtil
 import org.eclipse.core.resources.IMarker
 import scala.tools.nsc.settings.ScalaVersion
 import scala.tools.nsc.settings.SpecificScalaVersion
-import sbt.ScalaInstance
+import sbt.internal.inc.ScalaInstance
 import org.scalaide.core.IScalaModule
 import org.scalaide.core.internal.project.ScalaInstallationChoice
 import org.scalaide.core.internal.project.LabeledScalaInstallation

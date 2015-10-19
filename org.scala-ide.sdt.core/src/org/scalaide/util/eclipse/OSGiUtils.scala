@@ -15,6 +15,18 @@ import org.eclipse.ui.plugin.AbstractUIPlugin
 import java.io.IOException
 import scala.collection.JavaConverters.enumerationAsScalaIteratorConverter
 
+object Print {
+  def print2file(op: java.io.BufferedWriter => Unit): Unit = {
+    val f = new java.io.File("/Users/martin/Desktop/scala-ide.txt")
+    val w = new java.io.BufferedWriter(new java.io.FileWriter(f, true))
+    op(w)
+    w.write("\n")
+    w.flush
+  }
+
+  def print2file(msg: String): Unit = print2file { _ write (msg + "\n") }
+}
+
 object OSGiUtils {
 
   private def urlToPath(url: URL): IPath = Path.fromOSString(FileLocator.toFileURL(url).getPath)
@@ -32,6 +44,7 @@ object OSGiUtils {
    *  accepts `null`
    */
   def getBundlePath(bundle: Bundle): Option[IPath] = util.control.Exception.failing(classOf[IOException]) {
+    Print.print2file("Looking for bundle: " + bundle)
     Option(bundle).map(b => Path.fromOSString(FileLocator.getBundleFile(b).getAbsolutePath()))
   }
 

@@ -14,8 +14,8 @@ import org.scalaide.core.internal.builder.EclipseBuildManager
 import org.scalaide.core.internal.project.scopes.BuildScopeUnit
 import org.scalaide.ui.internal.preferences.ScalaPluginSettings
 import org.scalaide.util.internal.SettingConverterUtil
-import sbt.inc.Analysis
-import sbt.inc.IncOptions
+import sbt.internal.inc.Analysis
+import sbt.internal.inc.IncOptions
 import java.io.File
 
 /** Manages of source compilation for all scopes.
