@@ -13,15 +13,15 @@
 
   <dependencies>
     <dependency>
-        <groupId>com.typesafe.sbt</groupId>
-        <artifactId>sbt-interface</artifactId>
-        <version>${sbt.ide.version}</version>
+        <groupId>org.scala-sbt</groupId>
+        <artifactId>compiler-interface</artifactId>
+        <version>${incrementalcompiler.version}</version>
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>com.typesafe.sbt</groupId>
-        <artifactId>incremental-compiler</artifactId>
-        <version>${sbt.ide.version}</version>
+        <groupId>org.scala-sbt</groupId>
+        <artifactId>incrementalcompiler_2.11</artifactId>
+        <version>${incrementalcompiler.version}</version>
         <optional>true</optional>
     </dependency>
     <dependency>
